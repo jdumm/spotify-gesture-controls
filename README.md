@@ -38,7 +38,7 @@ You will be asked to log into your personal Spotify account on the first executi
 
 Summary of steps above: 
 * Sign up as a Spotify developer
-* Create an app with name 'Spotify Gesture Controler' and description 'Use hand gestures to
+* Create an app with name 'Spotify Gesture Controller' and description 'Use hand gestures to
  control Spotify playback' 
 * In the new app's dashboard: Edit Settings --> Redirect URIs --> "http://localhost:8888/callback
 " --> Add --> Save
