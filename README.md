@@ -17,13 +17,15 @@ Runs smoothly at about 30 fps on my macbook.
 
 ## Supported Functions
 
-* Play/pause - !['Talk to the hand'](gifs/pause_or_play.png)
-* Volume up - !['peace sign'](gifs/volume_up.png)
-* Volume down - !['peace sign to the right'](gifs/volume_down.png)
-* Previous track - !["hitchin'"](gifs/previous_track.png)
-* Next track - !['Point right'](gifs/next_track.png)
-* Like song - !['Thumbs up'](gifs/like.png)
-* Cycle through active Spotify Connect devices - !['C'](gifs/connect_cycle.png) 
+* Play/pause
+* Volume up
+* Volume down
+* Previous track
+* Next track
+* Like song
+* Cycle through active Spotify Connect devices
+
+<img src="gifs/pause_or_play.png" width="200" alt="Talk to the hand"/>  <img src="gifs/volume_up.png" width="200" alt="Peace sign"/> <img src="gifs/volume_down.png" width="200" alt="Peace sign to the right"/> <img src="gifs/previous_track.png" width="200" alt="Hitchin'"/> <img src="gifs/next_track.png" width="200" alt="Point right"/> <img src="gifs/like.png" width="200" alt="Thumbs up"/> <img src="gifs/connect_cycle.png" width="200" alt="'C'"/>
 
 ## Quick start
 
