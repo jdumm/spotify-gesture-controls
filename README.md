@@ -23,6 +23,7 @@ Runs smoothly at about 30 fps on my macbook.
 * Previous track - Point thumb to the left like you're hitchin'
 * Next track - Point index finger to the right
 * Like song - Thumbs up
+* Cycle through active Spotify Connect devices - "C" 
 
 ## Quick start
 
@@ -43,7 +44,7 @@ Summary of steps above:
 * In the new app's dashboard: Edit Settings --> Redirect URIs --> "http://localhost:8888/callback
 " --> Add --> Save
 * Create a local copy of the client credentials in your OS environment.  This example should work
- for macOS and Linux.  
+ for macOS and Linux:  
 ```
 export USERNAME=<a user name, probably good to match your Spotify username>
 export SPOTIPY_CLIENT_ID=<from the app dashboard>

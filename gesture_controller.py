@@ -1,15 +1,9 @@
 import cv2
-import os
-import pickle
-import mediapipe as mp
-import numpy as np
-import time
 import copy
 import argparse
 
 from hand_poses import HandPoses
 from hand_detect import HandDetect
-# from hand_movements import HandMovements
 from delay import Delay
 from spotify_controls import SpotifyControls
 
@@ -20,7 +14,7 @@ parser.add_argument("--detect_threshold", help="minimum percentage of a hand pre
 parser.add_argument("--pose_threshold", help="SVC threshold in classification confidence", 
                     type=float, default=0.90)
 parser.add_argument("--path_classifier", help="path to classifier",
-                    type=str, default='spotify_cmd_model.pkl')
+                    type=str, default='spotify_gesture_cmd_model.pkl')
 parser.add_argument("--screen_proportion", help="proportion of area to mapper mouse movement", 
                     type=float, default=0.75)
 parser.add_argument("--len_moving_average", help="length of array of the last frames used to compute the current position when on mouse mode", 

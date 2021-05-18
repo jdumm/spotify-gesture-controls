@@ -8,8 +8,7 @@ from collections import defaultdict
 parser = argparse.ArgumentParser()
 parser.add_argument("-f", "--file", help="data file name",
                     type=str, required=True)
-parser.add_argument(
-    "-p", "--path", help="directory to save the data", type=str, default='.')
+parser.add_argument("-p", "--path", help="directory to save the data", type=str, default='.')
 args = parser.parse_args()
 
 file_name = args.file
@@ -74,7 +73,6 @@ with mp_hands.Hands(
 
         cv2.imshow('frame', image)
 
-        # print(f'\rM: {cnt_mouse} - L: {cnt_left} - R: {cnt_right} - UP: {cnt_scrllup} - DOWN: {cnt_scrlldown} - ZOOM: {cnt_zoom} -- TOTAL = {len(data)}', end='', flush=True)
         s = f'\r'
         for k in counts:
             s += f'{k}: {counts[k]} '
