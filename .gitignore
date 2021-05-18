@@ -4,3 +4,4 @@ __pycache__
 .env.sh
 *.pkl
 *.csv
+.DS_Store

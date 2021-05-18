@@ -50,7 +50,7 @@ with hand_detect.mp_hands.Hands(
 
         image = cv2.flip(image, 1)
         image_height, image_width, _ = image.shape
-        spotify_controller.draw_mouse_rectangle(image)
+        #spotify_controller.draw_mouse_rectangle(image)
 
         for (pose, confidence), (lm, mp_lm) in hand_detect.detect_hand(hands=hands,
                                                               image=raw_frame,
@@ -63,7 +63,7 @@ with hand_detect.mp_hands.Hands(
             if pose is not None:
                 cv2.putText(image, f"{pose}: ({confidence:.2f})",
                             (30, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 100), 2)
-                print(f"\r{pose}: ({confidence:.2f})")
+                print(f"\r{pose}: ({confidence:.2f})           ", "", end="")
 
                 spotify_controller.execute_cmd(pose=pose, lm=lm, delay=delay, frame=image)
 

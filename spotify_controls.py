@@ -90,7 +90,6 @@ class SpotifyControls:
                 frame {cv2 Image, np.ndarray}: webcam frame
         """
         if pose == 'pause_or_play':
-            print(pose)
             try:
                 playback = self.sp_client.current_playback()
                 if playback is None or not playback['is_playing']:
@@ -113,7 +112,6 @@ class SpotifyControls:
             delay.set_in_action(True)
 
         elif pose == 'volume_up':
-            print(pose)
             try:
                 cur_vol = self.sp_client.current_playback()['device']['volume_percent']
                 new_vol = min(cur_vol+10, 100)
@@ -127,7 +125,6 @@ class SpotifyControls:
             delay.set_in_action(True)
 
         elif pose == 'volume_down':
-            print(pose)
             try:
                 cur_vol = self.sp_client.current_playback()['device']['volume_percent']
                 new_vol = max(cur_vol-10, 0)
@@ -149,9 +146,7 @@ class SpotifyControls:
                     if dev['id'] == cur_dev_id:
                         cur_dev_idx = i
 
-                # Still testing this logic to move to different Connect devices
-                new_dev_idx = \
-                    cur_dev_idx - 1 if pose == 'connect_speaker' else (cur_dev_idx + 1) % len(devs)
+                new_dev_idx = cur_dev_idx - 1  # Loop backwards
 
                 new_dev_id = devs[new_dev_idx]['id']
                 self.sp_client.transfer_playback(new_dev_id)
