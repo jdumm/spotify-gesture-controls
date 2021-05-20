@@ -15,7 +15,7 @@ Control Spotify playback via hand gestures and your webcam.
 Runs smoothly at about 30 fps on my macbook. 
 
 
-## Supported Functions
+## Supported Functions - Left-hand only in pre-trained model!
 
 * Play/pause
 * Volume up
