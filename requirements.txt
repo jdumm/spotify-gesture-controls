@@ -1,3 +1,4 @@
+Cython==0.29.23
 scikit-learn==0.22.2.post1
 PyAutoGUI==0.9.52
 mediapipe==0.8.3
