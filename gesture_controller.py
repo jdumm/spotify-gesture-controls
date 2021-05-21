@@ -45,6 +45,9 @@ with hand_detect.mp_hands.Hands(
         min_tracking_confidence=0.5) as hands:
     while True:
         ret, image = cap.read()
+        if not ret:  # Image was not successfully read!
+            print('\rNo image!  Is a webcam available?', '', end='')
+            continue
 
         raw_frame = copy.deepcopy(image)
 
@@ -63,7 +66,7 @@ with hand_detect.mp_hands.Hands(
             if pose is not None:
                 cv2.putText(image, f"{pose}: ({confidence:.2f})",
                             (30, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 100), 2)
-                print(f"\r{pose}: ({confidence:.2f})           ", "", end="")
+                print(f"\r{pose}: ({confidence:.2f})                   ", "", end="")
 
                 spotify_controller.execute_cmd(pose=pose, lm=lm, delay=delay, frame=image)
 
