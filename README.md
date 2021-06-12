@@ -1,6 +1,6 @@
 # Authors:
 
-This project forked from the fine work of:
+This project originally forked from the fine work of:
 * Luiz Henrique da Silva Santos - https://github.com/luizhss/ - https://www.linkedin.com/in/luizhssantos/
 * Matheus Vyctor Aranda Espíndola - https://github.com/Matheus-Vyctor/ - https://www.linkedin.com/in/matheus-vyctor/
 
@@ -42,7 +42,7 @@ You will be asked to log into your personal Spotify account on the first executi
 Summary of steps above: 
 * Sign up as a Spotify developer
 * Create an app with name 'Spotify Gesture Controller' and description 'Use hand gestures to
- control Spotify playback' 
+ control Spotify playback.' 
 * In the new app's dashboard: Edit Settings --> Redirect URIs --> "http://localhost:8888/callback
 " --> Add --> Save
 * Create a local copy of the client credentials in your OS environment.  This example should work
@@ -67,5 +67,6 @@ This gives coordinates of hand 'landmarks' in 3D.  These data are passed to a mu
 classifier (currently sklearn's SVC), which recognizes custom-trained gestures.  Retraining is
  possible quite quickly with a utility to generate new training samples.  Once a gesture
 is recognized, [Spotify API](https://developer.spotify.com/documentation/web-api/quick-start/) 
-commands are executed using Python interface [Spotipy](https://spotipy.readthedocs.io/en/2.18.0/). 
+commands are executed using a Python interface called [Spotipy](https://spotipy.readthedocs.io/en/2
+.18.0/). 
 
