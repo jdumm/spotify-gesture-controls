@@ -57,7 +57,7 @@ It can be handy to put those env variables into a local env.sh file and `source 
 
 To start gesture recognition (allow webcam permissions when prompted), execute:
 ```
-python gesture_controller.py
+python src/python/gesture_controller.py
 ```
 
 ## How it works

@@ -10,9 +10,9 @@ import argparse
 from hand_pose_transform import HandPoseTransform
 
 parser = argparse.ArgumentParser(description="List Parameters.")
-parser.add_argument("-d", "--dataset_path", type=str, default='dataset_train.csv',
+parser.add_argument("-d", "--dataset_path", type=str, default='data/dataset_train.csv',
                     help='Dataset filename path')
-parser.add_argument("-s", "--save_path", type=str, default='handsPoseClassifier.pkl',
+parser.add_argument("-s", "--save_path", type=str, default='hands_pose_classifier.pkl',
                     help='Path to save trained SVC model')
 parser.add_argument("--test_size", type=float, default=0.2,
                     help='Float % Test Size')

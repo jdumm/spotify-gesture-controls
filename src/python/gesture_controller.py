@@ -20,7 +20,7 @@ parser.add_argument("--detect_threshold", help="minimum percentage of a hand pre
 parser.add_argument("--pose_threshold", help="SVC threshold in classification confidence", 
                     type=float, default=0.90)
 parser.add_argument("--path_classifier", help="path to classifier",
-                    type=str, default='spotify_gesture_cmd_model.pkl')
+                    type=str, default='models/spotify_gesture_cmd_model.pkl')
 parser.add_argument("--screen_proportion", help="proportion of area to mapper mouse movement", 
                     type=float, default=0.75)
 parser.add_argument("--len_moving_average", help="length of array of the last frames used to compute the current position when on mouse mode", 
@@ -28,7 +28,7 @@ parser.add_argument("--len_moving_average", help="length of array of the last fr
 parser.add_argument("--moving_average", help="minimum percentage of pose prediction of last frames", 
                     type=float, default=0.8)
 parser.add_argument("--frames_in", help="number of frames to consider to predict a pose when in action", 
-                    type=int, default=40)
+                    type=int, default=30)
 parser.add_argument("--frames_out", help="number of frames to consider to predict a pose", 
                     type=int, default=45)
 parser.add_argument("--show_lm", help="show hand landmarks", 
