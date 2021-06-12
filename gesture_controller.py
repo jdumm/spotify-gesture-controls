@@ -43,7 +43,7 @@ hand_pose = HandPoses(pose_threshold=args.pose_threshold,
 spotify_controller = SpotifyControls(screen_proportion=args.screen_proportion, len_moving_average=args.len_moving_average)
 delay = Delay(hand_pose.classifier.classes_, moving_average=args.moving_average, frames_in_action=args.frames_in, frames_out=args.frames_out)
 
-webcam = False
+webcam = True
 if webcam:
     cap = cv2.VideoCapture(0)
 else:
