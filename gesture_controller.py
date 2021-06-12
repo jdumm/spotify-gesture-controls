@@ -1,3 +1,9 @@
+import numpy as np
+import pyautogui
+import imutils
+from mss import mss
+from PIL import Image
+
 import cv2
 import copy
 import argparse
@@ -37,14 +43,30 @@ hand_pose = HandPoses(pose_threshold=args.pose_threshold,
 spotify_controller = SpotifyControls(screen_proportion=args.screen_proportion, len_moving_average=args.len_moving_average)
 delay = Delay(hand_pose.classifier.classes_, moving_average=args.moving_average, frames_in_action=args.frames_in, frames_out=args.frames_out)
 
-cap = cv2.VideoCapture(0)
+webcam = False
+if webcam:
+    cap = cv2.VideoCapture(0)
+else:
+    sct = mss()
 
 with hand_detect.mp_hands.Hands(
         max_num_hands=1,
         min_detection_confidence=0.6,
         min_tracking_confidence=0.5) as hands:
     while True:
-        ret, image = cap.read()
+        if webcam:
+            ret, image = cap.read()
+        else:  # screenshot
+            ret = True
+            # image = pyautogui.screenshot()
+            # image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+            # Higher fps with mss for screen grab:
+            mon = sct.monitors[0]
+            image = np.array(sct.grab(mon))
+            image = np.flip(image[:, :, :3], 2)
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+
         if not ret:  # Image was not successfully read!
             print('\rNo image!  Is a webcam available?', '', end='')
             continue
@@ -80,10 +102,12 @@ with hand_detect.mp_hands.Hands(
 
         image = cv2.resize(image, (int(image_width * .6),
                                    int(image_height * .6)), interpolation=cv2.INTER_AREA)
+        # if webcam:
         cv2.imshow('frame', image)
 
         if key == ord('q'):
             break
 
-cap.release()
+if webcam:
+    cap.release()
 cv2.destroyAllWindows()
