@@ -21,16 +21,12 @@ parser.add_argument("--pose_threshold", help="SVC threshold in classification co
                     type=float, default=0.90)
 parser.add_argument("--path_classifier", help="path to classifier",
                     type=str, default='models/spotify_gesture_cmd_model.pkl')
-parser.add_argument("--screen_proportion", help="proportion of area to mapper mouse movement", 
-                    type=float, default=0.75)
-parser.add_argument("--len_moving_average", help="length of array of the last frames used to compute the current position when on mouse mode", 
-                    type=int, default=10)
-parser.add_argument("--moving_average", help="minimum percentage of pose prediction of last frames", 
-                    type=float, default=0.8)
+parser.add_argument("--moving_average", help="minimum percentage of pose prediction of last frames",
+                    type=float, default=0.85)
 parser.add_argument("--frames_in", help="number of frames to consider to predict a pose when in action", 
-                    type=int, default=30)
+                    type=int, default=20)
 parser.add_argument("--frames_out", help="number of frames to consider to predict a pose", 
-                    type=int, default=45)
+                    type=int, default=40)
 parser.add_argument("--show_lm", help="show hand landmarks", 
                     type=bool, default=True)
 args = parser.parse_args()
@@ -40,7 +36,7 @@ hand_detect = HandDetect(detect_threshold=args.detect_threshold)
 hand_pose = HandPoses(pose_threshold=args.pose_threshold,
                       name_classifier=args.path_classifier)
 # This will log into Spotify using your personal account with a separate popup window
-spotify_controller = SpotifyControls(screen_proportion=args.screen_proportion, len_moving_average=args.len_moving_average)
+spotify_controller = SpotifyControls()
 delay = Delay(hand_pose.classifier.classes_, moving_average=args.moving_average, frames_in_action=args.frames_in, frames_out=args.frames_out)
 
 webcam = True

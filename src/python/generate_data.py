@@ -25,9 +25,20 @@ key2cmd = {
     'n': 'next_track',
     'b': 'previous_track',
     'p': 'pause_or_play',
-    'v': 'volume_up',
-    'd': 'volume_down',
+    # 'v': 'volume_up',
+    # 'd': 'volume_down',
     'l': 'like',
+    # '1': 'skipback_1',
+    '2': 'skipback_2',
+    '3': 'skipback_3',
+    '4': 'skipback_4',
+    '5': 'skipback_5',
+    '6': 'skipfwd_1',
+    '7': 'skipfwd_2',
+    '8': 'skipfwd_3',
+    '9': 'skipfwd_4',
+    '0': 'skipfwd_5',
+    'm': 'mark_pos',
 }
 counts = defaultdict(lambda: 0)
 data = []

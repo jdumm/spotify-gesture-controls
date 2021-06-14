@@ -3,6 +3,7 @@ import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import pyautogui
 import cv2
+from datetime import datetime
 
 from utils import *
 
@@ -25,19 +26,11 @@ class SpotifyControls:
                 (default: {10})
     """
 
-    def __init__(self, screen_proportion=0.75, len_moving_average=10):
-        self.screen_proportion = screen_proportion
-
-        self.screen_width, self.screen_height = pyautogui.size()
-        self.camera_width, self.camera_height = None, None
-        self.x_start_screen, self.y_start_screen = None, None
-        self.x_end_screen, self.y_end_screen = None, None
-
-        self.angle_now = None
-
-        self.x_moving_average = np.array([])
-        self.y_moving_average = np.array([])
-        self.len_moving_average = len_moving_average
+    def __init__(self):
+        self.marked_pos = None
+        self.marked_uri = 'empty'
+        self.prev_index_finger_tip_y = None
+        self.prev_vol_datetime = None
 
         self.username = os.environ['USERNAME']
 
@@ -51,31 +44,6 @@ class SpotifyControls:
                 username=self.username,
             )
         )
-
-    def draw_mouse_rectangle(self, frame):
-        """
-        This method draw a rectangle of the effective interaction area to mapping mouse movement
-        """
-
-        if self.camera_width is None:
-            image_height, image_width, _ = frame.shape
-
-            self.update_width_height(image_height, image_width)
-
-        cv2.rectangle(frame, (self.x_start_screen, self.y_start_screen),
-                      (self.x_end_screen, self.y_end_screen), (255, 255, 255), 2)
-
-    def update_width_height(self, image_height, image_width):
-        """
-        This method update the width and height of the camera and the points
-        that limit the effective interaction area to mapping mouse movement
-        """
-
-        self.camera_width, self.camera_height = image_width, image_height
-        self.x_start_screen = int((1 - self.screen_proportion) * self.camera_width / 2)
-        self.y_start_screen = int((1 - self.screen_proportion) * self.camera_height / 2)
-        self.x_end_screen = int((1 + self.screen_proportion) * self.camera_width / 2)
-        self.y_end_screen = int((1 + self.screen_proportion) * self.camera_height / 2)
 
     def execute_cmd(self, pose, lm, delay, frame):
         """
@@ -107,34 +75,7 @@ class SpotifyControls:
                     print("Tried to turn the volume up...")
                     print("Sorry, user needs to log into a device with Spotify!")
 
-            self.angle_now = None
-            delay.reset_counter()
-            delay.set_in_action(True)
-
-        elif pose == 'volume_up':
-            try:
-                cur_vol = self.sp_client.current_playback()['device']['volume_percent']
-                new_vol = min(cur_vol+10, 100)
-                self.sp_client.volume(new_vol)
-            except spotipy.exceptions.SpotifyException as e:
-                print("Tried to turn the volume up...")
-                print(e)
-
-            self.angle_now = None
-            delay.reset_counter()
-            delay.set_in_action(True)
-
-        elif pose == 'volume_down':
-            try:
-                cur_vol = self.sp_client.current_playback()['device']['volume_percent']
-                new_vol = max(cur_vol-10, 0)
-                self.sp_client.volume(new_vol)
-            except spotipy.exceptions.SpotifyException as e:
-                print("Tried to turn the volume down...")
-                print(e)
-
-            self.angle_now = None
-            delay.reset_counter()
+            delay.reset_counter(20)
             delay.set_in_action(True)
 
         elif pose == 'connect_cycle':
@@ -154,8 +95,7 @@ class SpotifyControls:
                 print("Tried to change device to connect_speaker (left)...")
                 print(e)
 
-            self.angle_now = None
-            delay.reset_counter()
+            delay.reset_counter(20)
             delay.set_in_action(True)
 
         elif pose == 'next_track':
@@ -165,15 +105,74 @@ class SpotifyControls:
                 print("Tried to go to next track...")
                 print(e)
 
-            self.angle_now = None
-            delay.reset_counter()
+            delay.reset_counter(10)
             delay.set_in_action(True)
 
         elif pose == 'previous_track':
             try:
-                self.sp_client.previous_track()
+                playback = self.sp_client.current_playback()
+                if playback is not None:
+                    cur_uri = playback['item']['uri']
+                    cur_pos = playback['progress_ms']
+                    # Check if we have a valid mark in this track to skip back to
+                    if self.marked_pos is not None and self.marked_pos < cur_pos \
+                            and cur_uri == self.marked_uri:
+                        self.sp_client.seek_track(self.marked_pos)
+                    else:
+                        if cur_pos < 6*1000:  # Go to previous track
+                            self.sp_client.previous_track(self.marked_pos)
+                        else:  # Go back to beginning of track
+                            self.sp_client.seek_track(0)
             except spotipy.exceptions.SpotifyException as e:
                 print("Tried to go to previous track...")
+                print(e)
+
+            delay.reset_counter(10)
+            delay.set_in_action(True)
+
+        elif pose == 'volume_slider':
+            try:
+                playback = self.sp_client.current_playback()
+                if playback is not None:
+                    if self.prev_index_finger_tip_y is not None \
+                            and self.prev_vol_datetime is not None \
+                            and (datetime.now() - self.prev_vol_datetime).total_seconds() < 2.5:
+                        cur_vol = playback['device']['volume_percent']
+                        # print(f"DEBUG: Current volume {cur_vol}.")
+                        # print(f"DEBUG: Landmarks: {lm[8*3+1]}")
+                        cur_index_finger_tip_y = lm[8*3+1]
+                        vol_diff = int((self.prev_index_finger_tip_y - cur_index_finger_tip_y)*200)
+                        new_vol = max(0, min(100, cur_vol + vol_diff))
+                        self.sp_client.volume(new_vol)
+                        # print(f"DEBUG: New Volume: {new_vol}")
+                        self.prev_index_finger_tip_y = lm[8*3+1]
+                        self.prev_vol_datetime = datetime.now()
+                    else:
+                        self.prev_index_finger_tip_y = lm[8*3+1]
+                        self.prev_vol_datetime = datetime.now()
+                        # print(f"DEBUG: Setting volume reference point to {self.prev_index_finger_tip_y}")
+                else:
+                    print("No active playback device... start playing Spotify somewhere.")
+            except spotipy.exceptions.SpotifyException as e:
+                print("Tried to set volume...")
+                print(e)
+
+            delay.reset_counter()
+            delay.set_in_action(True)
+
+        # E.g. 'skipback_2' or 'skipfwd_5'
+        elif pose[:9] == 'skipback_' or pose[:8] == 'skipfwd_':
+            n = int(pose[-1]) * (-1 if pose[:9] == 'skipback_' else 1)
+            try:
+                playback = self.sp_client.current_playback()
+                if playback is not None:
+                    new_pos = max(playback['progress_ms']+int((3*n + 0.3)*1000), 0)
+                    self.sp_client.seek_track(new_pos)
+                    # print(f"DEBUG: Seek {(new_pos - playback['progress_ms'])/1000} seconds.")
+                else:
+                    print("No active playback device... start playing Spotify somewhere.")
+            except spotipy.exceptions.SpotifyException as e:
+                print("Tried to skipback...")
                 print(e)
 
             self.angle_now = None
@@ -184,19 +183,38 @@ class SpotifyControls:
             try:
                 playback = self.sp_client.current_playback()
                 if playback is not None and playback['is_playing']:
-                    track_id = playback['item']['id']
+                    track_id = playback['progress_ms']
                     self.sp_client.current_user_saved_tracks_add(tracks=[track_id])
             except spotipy.exceptions.SpotifyException as e:
                 print("Tried to like a song...")
                 print(e)
 
-            self.angle_now = None
-            delay.reset_counter()
+            delay.reset_counter(20)
             delay.set_in_action(True)
 
-        else:
-            self.angle_now = None
-        return None
+        elif pose == 'mark_pos':
+            try:
+                playback = self.sp_client.current_playback()
+                if playback is not None:  # and playback['is_playing']:
+                    cur_uri = playback['item']['uri']
+                    if self.marked_uri == 'empty' or self.marked_uri != cur_uri:
+                        self.marked_pos = playback['progress_ms']
+                        self.marked_uri = playback['item']['uri']
+                        print(f"DEBUG: Position {self.marked_pos} marked.")
+                    else:  # Delete old mark
+                        print(f"DEBUG: Position {self.marked_pos} deleted.")
+                        self.marked_pos = None
+                        self.marked_uri = 'empty'
+
+                else:
+                    print("No active playback device... start playing Spotify somewhere.")
+            except spotipy.exceptions.SpotifyException as e:
+                print("Tried to mark_pos...")
+                print(e)
+
+            delay.reset_counter(20)  # Ignore a few more frames than usual to avoid undoing
+            delay.set_in_action(True)
+
 
 
 
