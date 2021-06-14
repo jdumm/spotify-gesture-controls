@@ -17,6 +17,8 @@ Runs smoothly at about 30 fps on my macbook.
 
 ## Supported Functions - Left-hand only in pre-trained model!
 
+(Needs update!)
+
 * Play/pause
 * Volume up
 * Volume down
